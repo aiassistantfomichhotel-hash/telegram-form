@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="uk">
   <head>
@@ -6,16 +5,32 @@
     <title>Форма бронювання</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-      body { font-family: sans-serif; padding: 2em; background: #f8f8f8; }
-      label { display: block; margin-top: 1em; }
-      input, textarea { width: 100%; padding: 0.5em; margin-top: 0.5em; }
-      button { margin-top: 1.5em; padding: 1em 2em; font-size: 1em; }
+      body {
+        font-family: sans-serif;
+        padding: 2em;
+        background: #f8f8f8;
+      }
+      label {
+        display: block;
+        margin-top: 1em;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 0.5em;
+        margin-top: 0.5em;
+      }
+      button {
+        margin-top: 1.5em;
+        padding: 1em 2em;
+        font-size: 1em;
+      }
     </style>
   </head>
   <body>
     <h2>Форма бронювання</h2>
     <form id="bookingForm">
-      <label>Ім’я:
+      <label>Імʼя:
         <input type="text" name="name" required />
       </label>
       <label>Телефон:
@@ -24,20 +39,21 @@
       <label>Email:
         <input type="email" name="email" required />
       </label>
-      <label>Бажані дати:
-        <textarea name="dates" required></textarea>
+      <label>Дати бронювання:
+        <input type="text" name="dates" placeholder="Наприклад: 21-23 листопада" required />
+      </label>
+      <label>Коментарі:
+        <textarea name="comments" rows="4"></textarea>
       </label>
       <button type="submit">Надіслати</button>
     </form>
 
     <script>
-      document.getElementById("bookingForm").addEventListener("submit", function (e) {
+      const form = document.getElementById("bookingForm");
+      form.addEventListener("submit", function (e) {
         e.preventDefault();
-        const formData = new FormData(this);
-        const data = {};
-        formData.forEach((value, key) => data[key] = value);
-        alert("Форма надіслана! Дані: " + JSON.stringify(data));
-        // Тут можна реалізувати надсилання через Telegram WebApp API
+        const data = Object.fromEntries(new FormData(form).entries());
+        alert("Форму надіслано!\n" + JSON.stringify(data, null, 2));
       });
     </script>
   </body>
