@@ -1,80 +1,68 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html>
 <head>
   <meta charset="UTF-8" />
-  <title>Форма бронювання</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Telegram Form</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
-      font-family: sans-serif;
-      padding: 2em;
-      background: #f8f8f8;
+      font-family: Arial, sans-serif;
+      margin: 20px;
     }
     label {
       display: block;
-      margin-top: 1em;
+      margin-top: 10px;
     }
     input, textarea {
       width: 100%;
-      padding: 0.5em;
-      margin-top: 0.5em;
+      padding: 8px;
+      margin-top: 4px;
     }
     button {
-      margin-top: 1.5em;
-      padding: 1em 2em;
-      font-size: 1em;
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      background-color: #3b8beb;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <h2>Форма бронювання</h2>
   <form id="bookingForm">
-    <label>Імʼя:
+    <label>Ім'я
       <input type="text" name="name" required />
     </label>
-    <label>Телефон:
+    <label>Телефон
       <input type="tel" name="phone" required />
     </label>
-    <label>Email:
-      <input type="email" name="email" />
-    </label>
-    <label>Дата заїзду:
-      <input type="date" name="checkin" required />
-    </label>
-    <label>Дата виїзду:
-      <input type="date" name="checkout" required />
+    <label>Дата бронювання
+      <input type="date" name="date" required />
     </label>
     <button type="submit">Надіслати</button>
   </form>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const form = document.getElementById("bookingForm");
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
+    const form = document.getElementById("bookingForm");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
 
-        const name = form.name.value;
-        const phone = form.phone.value;
-        const email = form.email.value;
-        const checkin = form.checkin.value;
-        const checkout = form.checkout.value;
+      const data = {
+        name: form.elements["name"].value,
+        phone: form.elements["phone"].value,
+        date: form.elements["date"].value,
+        chat_id: tg.initDataUnsafe?.user?.id || null
+      };
 
-        const data = {
-          name,
-          phone,
-          email,
-          checkin,
-          checkout
-        };
-
-        if (window.Telegram.WebApp) {
-          Telegram.WebApp.sendData(JSON.stringify(data));
-          Telegram.WebApp.close();
-        } else {
-          alert("Telegram WebApp API недоступний");
-        }
-      });
+      tg.sendData(JSON.stringify(data));
+      tg.close();
     });
   </script>
 </body>
