@@ -1,58 +1,58 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Бронювання</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
+<head>
+  <meta charset="UTF-8">
+  <title>Бронювання</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <form id="bookingForm">
+    <label for="name">Імʼя:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="date">Дата бронювання:</label>
+    <input type="date" id="date" name="date" required><br><br>
+
+    <button type="submit">Надіслати</button>
+  </form>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const chat_id = params.get("chat_id");
+    const message_id = params.get("message_id");
+    const user_id = params.get("user_id");
+
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const date = document.getElementById("date").value;
+
+      const payload = {
+        chat_id,
+        message_id,
+        user_id,
+        name,
+        date
+      };
+
+      try {
+        await fetch("https://hook.eu1.make.com/твій_webhook", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        tg.close(); // закриває WebApp після відправки
+
+      } catch (error) {
+        console.error("Помилка надсилання:", error);
+        alert("Помилка при відправці форми");
       }
-      input {
-        display: block;
-        width: 100%;
-        margin-bottom: 10px;
-        padding: 10px;
-        font-size: 16px;
-      }
-      button {
-        padding: 12px;
-        font-size: 16px;
-        background-color: #2ea2f8;
-        color: white;
-        border: none;
-        width: 100%;
-        cursor: pointer;
-      }
-    </style>
-  </head>
-  <body>
-    <h2>Форма бронювання</h2>
-    <input type="text" id="name" placeholder="Ім’я">
-    <input type="tel" id="phone" placeholder="Телефон">
-    <input type="text" id="dates" placeholder="Дати бронювання">
-    <button id="submit">Надіслати</button>
-
-    <script>
-      const tg = window.Telegram.WebApp;
-
-      document.getElementById('submit').addEventListener('click', function () {
-        const name = document.getElementById('name').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const dates = document.getElementById('dates').value.trim();
-
-        const data = {
-          name: name,
-          phone: phone,
-          dates: dates,
-          chat_id: tg.initDataUnsafe?.user?.id || null
-        };
-
-        tg.sendData(JSON.stringify(data));
-        tg.close();
-      });
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>
