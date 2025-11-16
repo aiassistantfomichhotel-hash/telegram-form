@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Форма бронювання</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font-family: sans-serif; padding: 2em; background: #f8f8f8; }
+      label { display: block; margin-top: 1em; }
+      input, textarea { width: 100%; padding: 0.5em; margin-top: 0.5em; }
+      button { margin-top: 1.5em; padding: 1em 2em; font-size: 1em; }
+    </style>
+  </head>
+  <body>
+    <h2>Форма бронювання</h2>
+    <form id="bookingForm">
+      <label>Ім’я:
+        <input type="text" name="name" required />
+      </label>
+      <label>Телефон:
+        <input type="tel" name="phone" required />
+      </label>
+      <label>Email:
+        <input type="email" name="email" required />
+      </label>
+      <label>Бажані дати:
+        <textarea name="dates" required></textarea>
+      </label>
+      <button type="submit">Надіслати</button>
+    </form>
+
+    <script>
+      document.getElementById("bookingForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => data[key] = value);
+        alert("Форма надіслана! Дані: " + JSON.stringify(data));
+        // Тут можна реалізувати надсилання через Telegram WebApp API
+      });
+    </script>
+  </body>
+</html>
