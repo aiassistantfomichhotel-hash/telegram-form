@@ -1,57 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>Бронювання</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Форма Бронювання</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    button {
+      background-color: #2a9d8f;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #21867a;
+    }
+  </style>
 </head>
 <body>
+  <h2>Забронювати</h2>
   <form id="bookingForm">
-    <label for="name">Імʼя:</label>
-    <input type="text" id="name" name="name" required><br><br>
+    <label for="name">Ім’я</label>
+    <input type="text" id="name" name="name" required>
 
-    <label for="date">Дата бронювання:</label>
-    <input type="date" id="date" name="date" required><br><br>
+    <label for="phone">Телефон</label>
+    <input type="tel" id="phone" name="phone" required>
+
+    <label for="email">Електронна пошта</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="startDate">Дата початку</label>
+    <input type="date" id="startDate" name="startDate" required>
+
+    <label for="endDate">Кінцева дата</label>
+    <input type="date" id="endDate" name="endDate" required>
+
+    <label for="notes">Примітки</label>
+    <textarea id="notes" name="notes" rows="4"></textarea>
 
     <button type="submit">Надіслати</button>
   </form>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const chat_id = params.get("chat_id");
-    const message_id = params.get("message_id");
-    const user_id = params.get("user_id");
-
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const chat_id = urlParams.get("chat_id");
+    const message_id = urlParams.get("message_id");
+    const user_id = urlParams.get("user_id");
+
+    document.getElementById("bookingForm").addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const name = document.getElementById("name").value;
-      const date = document.getElementById("date").value;
-
-      const payload = {
-        chat_id,
-        message_id,
-        user_id,
-        name,
-        date
+      const data = {
+        chat_id: chat_id,
+        message_id: message_id,
+        user_id: user_id,
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value,
+        start_date: document.getElementById("startDate").value,
+        end_date: document.getElementById("endDate").value,
+        notes: document.getElementById("notes").value
       };
 
-      try {
-        await fetch("https://hook.eu1.make.com/9kibicefoit4yzcyrdtugkeju82wx58s", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        tg.close(); // закриває WebApp після відправки
-
-      } catch (error) {
-        console.error("Помилка надсилання:", error);
-        alert("Помилка при відправці форми");
-      }
+      fetch("https://hook.eu1.make.com/ВАШ_WEBHOOK_ID", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      }).then(() => {
+        tg.close();
+      }).catch(() => {
+        alert("Помилка при надсиланні. Спробуйте ще раз.");
+      });
     });
   </script>
 </body>
