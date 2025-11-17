@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Форма Бронювання</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Форма бронювання</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -38,39 +38,40 @@
   <h2>Забронювати</h2>
   <form id="bookingForm">
     <label for="name">Ім’я</label>
-    <input type="text" id="name" name="name" required>
+    <input type="text" id="name" required>
 
     <label for="phone">Телефон</label>
-    <input type="tel" id="phone" name="phone" required>
+    <input type="tel" id="phone" required>
 
     <label for="email">Електронна пошта</label>
-    <input type="email" id="email" name="email" required>
+    <input type="email" id="email" required>
 
     <label for="startDate">Дата початку</label>
-    <input type="date" id="startDate" name="startDate" required>
+    <input type="date" id="startDate" required>
 
     <label for="endDate">Кінцева дата</label>
-    <input type="date" id="endDate" name="endDate" required>
+    <input type="date" id="endDate" required>
 
     <label for="notes">Примітки</label>
-    <textarea id="notes" name="notes" rows="4"></textarea>
+    <textarea id="notes" rows="4"></textarea>
 
     <button type="submit">Надіслати</button>
   </form>
 
   <script>
     const tg = window.Telegram.WebApp;
-    tg.expand();
+    tg.ready && tg.ready();
+    tg.expand && tg.expand();
 
     const urlParams = new URLSearchParams(window.location.search);
     const chat_id = urlParams.get("chat_id");
     const message_id = urlParams.get("message_id");
     const user_id = urlParams.get("user_id");
 
-    document.getElementById("bookingForm").addEventListener("submit", function (e) {
+    document.getElementById("bookingForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const data = {
+      const payload = {
         chat_id: chat_id,
         message_id: message_id,
         user_id: user_id,
@@ -82,17 +83,17 @@
         notes: document.getElementById("notes").value
       };
 
-      fetch("https://hook.eu1.make.com/9kibicefoit4yzcyrdtugkeju82wx58s", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      }).then(() => {
-        tg.close();
-      }).catch(() => {
-        alert("Помилка при надсиланні. Спробуйте ще раз.");
-      });
+      try {
+        await fetch("https://hook.eu1.make.com/kz6jzbnqxz0l56lmh5um9ijynpxk6fwx", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (tg.close) tg.close();
+      } catch (error) {
+        alert("Помилка надсилання. Спробуйте ще раз.");
+        console.error("Помилка fetch:", error);
+      }
     });
   </script>
 </body>
