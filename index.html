@@ -2,31 +2,58 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Запит на Бронювання</title>
+  <title>Бронювання</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen;
+      background-color: #ffffff;
+      color: #000;
     }
+
+    body {
+      padding: 20px;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
     label {
       display: block;
-      margin-top: 12px;
+      margin-top: 18px;
+      font-size: 16px;
     }
+
     input, textarea {
       width: 100%;
-      padding: 8px;
-      margin-top: 4px;
+      padding: 14px 12px;
+      margin-top: 8px;
+      font-size: 17px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
       box-sizing: border-box;
-      font-size: 16px;
     }
+
+    textarea {
+      resize: vertical;
+    }
+
     button {
-      margin-top: 16px;
-      padding: 10px 20px;
-      font-size: 16px;
+      margin-top: 24px;
       width: 100%;
+      padding: 16px;
+      font-size: 18px;
+      background-color: #0088cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0075b0;
     }
   </style>
 </head>
@@ -48,7 +75,7 @@
     <input type="date" id="endDate" name="endDate" required>
 
     <label for="notes">Примітки:</label>
-    <textarea id="notes" name="notes" rows="3"></textarea>
+    <textarea id="notes" name="notes" rows="4"></textarea>
 
     <button type="submit">Надіслати</button>
   </form>
@@ -83,7 +110,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
-        tg.close(); // автоматично закриває форму
+        tg.close();
       } catch (error) {
         console.error("Помилка надсилання:", error);
         alert("Помилка при відправці форми");
